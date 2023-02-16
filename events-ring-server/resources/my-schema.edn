@@ -1,0 +1,25 @@
+{:objects
+ {:Event
+  {:description "Event"
+   :fields
+   {:id {:type (non-null ID)}
+    :name {:type (non-null String)}
+    :description {:type String}
+    :tags {:type (list String)}
+    :start_date {:type String}
+    :end_date {:type String}
+    :repeat {:type RepeatEvent}}}
+  :RepeatEvent
+  {:description "Repeating event"
+   :fields
+   {:unit {:type (non-null String)}
+    :interval {:type (non-null Int)}}}}
+ 
+ :queries
+ {:event_by_id
+  {:type :Event
+   :args {:id {:type ID}}
+   :resolve :query/event-by-id}
+  :all_events
+  {:type (list :Event)
+   :resolve :query/all-events}}}
