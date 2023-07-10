@@ -6,26 +6,32 @@
     min-height: 100vh;
 }
 
-.eventsHeader {
-    background-color: red;
-    flex: 1;
-    padding: 1rem;
-}
-
 .eventsContainer {
     display: flex;
     flex: 9;
     flex-direction: row;
 }
 
+.eventsHeader {
+    border-color: red;
+    border-style: solid;
+    border-width: 10px;
+    flex: 1;
+    padding: 1rem;
+}
+
 .sideMenu {
-    background-color: blue;
+    border-color: blue;
+    border-style: solid;
+    border-width: 10px;
     flex: 1;
     padding: 1rem;
 }
 
 .eventsList {
-    background-color: green;
+    border-color: green;
+    border-style: solid;
+    border-width: 10px;
     flex: 6;
     padding: 1rem;
 }
