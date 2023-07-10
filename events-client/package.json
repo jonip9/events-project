@@ -23,7 +23,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "plugin:@typescript-eslint/recommended"
+      "plugin:@typescript-eslint/recommended",
       "preact"
     ],
     "parser": "@typescript-eslint/parser",
