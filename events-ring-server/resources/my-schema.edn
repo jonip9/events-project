@@ -6,19 +6,19 @@
  {:Event
   {:description "Event"
    :fields
-   {:id {:type (non-null ID)}
-    :name {:type (non-null String)}
-    :description {:type String}
-    :tags {:type (list String)}
-    :start_date {:type String}
-    :end_date {:type String}
-    :repeat {:type RepeatEvent}}}
+   {:event_id {:type (non-null UUID)}
+    :summary {:type (non-null String)}
+    :descr {:type String}
+    :dtstamp {:type (non-null String)}
+    :dtstart {:type String}
+    :dtend {:type String}
+    :duration {:type String}}}
   :RepeatEvent
-  {:description "Repeating event"
+  {:description "Temp. Not used."
    :fields
    {:unit {:type (non-null String)}
     :interval {:type (non-null Int)}}}}
- 
+
  :queries
  {:event_by_id
   {:type :Event
