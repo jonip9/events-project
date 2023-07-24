@@ -1,4 +1,8 @@
-{:objects
+{:scalars
+ {:UUID {:parse :uuid-parser
+         :serialize :uuid-serializer}}
+
+ :objects
  {:Event
   {:description "Event"
    :fields
