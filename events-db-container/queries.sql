@@ -7,6 +7,6 @@ CREATE TABLE event (
   dtstamp TIMESTAMP WITH TIME ZONE NOT NULL,
   dtstart TIMESTAMP WITH TIME ZONE,
   dtend TIMESTAMP WITH TIME ZONE,
-  duration INTERVAL,
+  duration INTERVAL
 );
 INSERT INTO event (summary, descr, dtstamp, dtstart, dtend, duration) VALUES ('event1', 'my descr', '2023-05-01', '2023-05-13', '2023-05-15', 'P7D');
