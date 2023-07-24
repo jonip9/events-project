@@ -10,3 +10,7 @@
 
 (def resolvers-map {:query/all-events all-events
                     :query/event-by-id event-by-id})
+
+(def transformers-map
+  {:uuid-parser #(java.util.UUID/fromString %)
+   :uuid-serializer #(str %)})

@@ -4,9 +4,11 @@
             [compojure.core :refer :all]
             [compojure.route :as route]
             [com.walmartlabs.lacinia :refer [execute]]
-            [com.walmartlabs.lacinia.util :refer [attach-resolvers]]
+            [com.walmartlabs.lacinia.util :refer [attach-resolvers
+                                                  attach-scalar-transformers]]
             [com.walmartlabs.lacinia.schema :as schema]
-            [events-ring-server.resolvers :refer [resolvers-map]]
+            [events-ring-server.resolvers :refer [resolvers-map
+                                                  transformers-map]]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.defaults :refer [api-defaults
                                               wrap-defaults]]
@@ -20,6 +22,7 @@
       io/resource
       slurp
       edn/read-string
+      (attach-scalar-transformers transformers-map)
       (attach-resolvers resolvers-map)
       schema/compile))
 

@@ -22,7 +22,7 @@
  :queries
  {:event_by_id
   {:type :Event
-   :args {:id {:type ID}}
+   :args {:id {:type UUID}}
    :resolve :query/event-by-id}
   :all_events
   {:type (list :Event)
