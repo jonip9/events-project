@@ -12,5 +12,5 @@
                     :query/event-by-id event-by-id})
 
 (def transformers-map
-  {:uuid-parser #(java.util.UUID/fromString %)
+  {:uuid-parser #(clojure.core/parse-uuid %)
    :uuid-serializer #(str %)})
