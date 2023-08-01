@@ -1,12 +1,16 @@
 {:scalars
  {:UUID {:parse :uuid-parser
-         :serialize :uuid-serializer}}
+         :serialize :uuid-serializer}
+  :Date {:parse :date-parser
+         :serialize :date-serializer}
+  :Interval {:parse :interval-parser
+             :serialize :interval-serializer}}
 
  :objects
  {:Event
   {:description "Event"
    :fields
-   {:event_id {:type (non-null UUID)}
+   {:event_id {:type UUID}
     :summary {:type (non-null String)}
     :descr {:type String}
     :dtstamp {:type (non-null String)}
