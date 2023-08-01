@@ -21,7 +21,18 @@
   {:description "Temp. Not used."
    :fields
    {:unit {:type (non-null String)}
-    :interval {:type (non-null Int)}}}}
+    :interval {:type (non-null Int)}}}
+  :Mutation
+  {:fields
+   {:insert_event
+    {:type :Event
+     :args {:summary {:type String}
+            :descr {:type String}
+            :dtstamp {:type Date}
+            :dtstart {:type Date}
+            :dtend {:type Date}
+            :duration {:type Interval}}
+     :resolve :mutation/insert-event}}}}
 
  :queries
  {:event_by_id

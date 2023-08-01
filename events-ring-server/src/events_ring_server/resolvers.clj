@@ -24,8 +24,20 @@
 (defn event-by-id [context args value]
   (jdbc/execute-one! ds-opts ["SELECT * FROM event WHERE event_id = ?" (:id args)]))
 
+(defn insert-event [context args value]
+  (let [{summary :summary
+         descr :descr
+         dtstamp :dtstamp
+         dtstart :dtstart
+         dtend :dtend
+         duration :duration} args]
+    (jdbc/execute-one! ds-opts
+                       ["INSERT INTO event (summary, descr, dtstamp, dtstart, dtend, duration) VALUES (?, ?, ?, ?, ?, ?)"
+                        summary descr dtstamp dtstart dtend duration])))
+
 (def resolvers-map {:query/all-events all-events
-                    :query/event-by-id event-by-id})
+                    :query/event-by-id event-by-id
+                    :mutation/insert-event insert-event})
 
 (def transformers-map
   {:uuid-parser #(clojure.core/parse-uuid %)
