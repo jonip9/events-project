@@ -1,21 +1,23 @@
 (ns events-ring-server.core
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [compojure.core :refer :all]
-            [compojure.route :as route]
             [com.walmartlabs.lacinia :refer [execute]]
             [com.walmartlabs.lacinia.util :refer [attach-resolvers
                                                   attach-scalar-transformers]]
             [com.walmartlabs.lacinia.schema :as schema]
             [events-ring-server.resolvers :refer [resolvers-map
                                                   transformers-map]]
-            [ring.adapter.jetty :as jetty]
-            [ring.middleware.defaults :refer [api-defaults
-                                              wrap-defaults]]
-            [ring.middleware.json :refer [wrap-json-body
-                                          wrap-json-response]]
-            [ring.util.response :refer [content-type
-                                        response]]))
+            [muuntaja.core :as m]
+            [reitit.coercion.malli :as cm]
+            [reitit.middleware :as middleware]
+            [reitit.ring :as ring]
+            [reitit.ring.coercion :as coercion]
+            [reitit.ring.malli]
+            [reitit.ring.middleware.dev :as dev]
+            [reitit.ring.middleware.exception :as exception]
+            [reitit.ring.middleware.muuntaja :as muuntaja]
+            [reitit.ring.middleware.parameters :as parameters]
+            [ring.adapter.jetty :as jetty]))
 
 (def my-schema
   (-> "my-schema.edn"
@@ -26,25 +28,26 @@
       (attach-resolvers resolvers-map)
       schema/compile))
 
-(defroutes my-routes
-  (GET "/" [:as request]
-       (response {:foo (str request)}))
-  (POST "/graphql" [:as request]
-        (response (let [query (get-in request [:body :query])]
-                    (execute my-schema query nil nil))))
-  (context "/events" [:as request]
-           (GET "/" []
-                (response {:events "TEMP"}))
-           (context "/:id" [id]
-                    (let-routes [event {}]
-                      (GET "/" []
-                           (response {:result event}))))))
-
 (def app
-  (-> my-routes
-      wrap-json-response
-      (wrap-json-body {:keywords? true})
-      (wrap-defaults api-defaults)))
+  (ring/ring-handler
+   (ring/router
+    [["/api"
+      ["/graphql" {:post {:parameters {:body [:map
+                                              [:query string?]]}
+                          :handler (fn [{{{:keys [query]} :body} :parameters}]
+                                     {:status 200
+                                      :body (execute my-schema query nil nil)})}}]]]
+    {:data {:coercion cm/coercion
+            :muuntaja m/instance
+            :middleware [parameters/parameters-middleware
+                         muuntaja/format-negotiate-middleware
+                         muuntaja/format-response-middleware
+                         exception/exception-middleware
+                         muuntaja/format-request-middleware
+                         coercion/coerce-response-middleware
+                         coercion/coerce-request-middleware]}
+     ::middleware/transform dev/print-request-diffs})
+   (ring/create-default-handler)))
 
 (defn -main [& args]
   (jetty/run-jetty app
