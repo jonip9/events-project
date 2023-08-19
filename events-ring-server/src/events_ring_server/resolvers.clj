@@ -69,6 +69,10 @@
                          (values [(parse-times args)])
                          sql/format)))
 
+(defn delete-event [ds id]
+  (jdbc/execute-one! ds (-> (delete-from :event)
+                            (where [:= :event_id (parse-uuid id)])
+                            sql/format)))
 
 (def resolvers-map {:query/all-events all-events
                     :query/event-by-id event-by-id
