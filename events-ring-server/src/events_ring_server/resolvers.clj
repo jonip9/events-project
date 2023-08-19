@@ -2,6 +2,8 @@
   (:import [org.postgresql.util PGInterval]
            [java.sql PreparedStatement]
            [java.time Duration])
+  (:require [honey.sql :as sql]
+            [honey.sql.helpers :refer [select from where insert-into delete-from values]]
             [next.jdbc :as jdbc]
             [next.jdbc.date-time]
             [next.jdbc.prepare :as p]
@@ -22,8 +24,6 @@
                   ^long i]
     (.setObject s i (->pg-interval v))))
 
-(defn all-events [context args value]
-  (jdbc/execute! ds-opts ["SELECT * FROM event"]))
 (defn <-pg-interval
   "Takes a PGInterval instance and converts it into a Duration
    instance. Ignore sub-second units."
@@ -34,8 +34,6 @@
       (.plusHours (.getHours interval))
       (.plusDays (.getDays interval))))
 
-(defn event-by-id [context args value]
-  (jdbc/execute-one! ds-opts ["SELECT * FROM event WHERE event_id = ?" (:id args)]))
 (extend-protocol rs/ReadableColumn
   ;; Convert PGIntervals back to durations.
   org.postgresql.util.PGInterval
@@ -44,16 +42,33 @@
   (read-column-by-index [^org.postgresql.util.PGInterval v _2 _3]
     (<-pg-interval v)))
 
-(defn insert-event [context args value]
-  (let [{summary :summary
-         descr :descr
-         dtstamp :dtstamp
-         dtstart :dtstart
-         dtend :dtend
-         duration :duration} args]
-    (jdbc/execute-one! ds-opts
-                       ["INSERT INTO event (summary, descr, dtstamp, dtstart, dtend, duration) VALUES (?, ?, ?, ?, ?, ?)"
-                        summary descr dtstamp dtstart dtend duration])))
+(defn all-events [ds]
+  (jdbc/execute! ds (-> (select :*)
+                        (from :event)
+                        sql/format)))
+
+(defn event-by-id [ds id]
+  (jdbc/execute-one! ds (-> (select :*)
+                            (from :event)
+                            (where [:= :event_id (parse-uuid id)])
+                            sql/format)))
+
+(defn parse-times [event-m]
+  (reduce-kv (fn [m k v]
+               (cond (or (= k :dtstamp)
+                         (= k :dtstart)
+                         (= k :dtend)) (assoc m k (java.time.Instant/parse v))
+                     (= k :duration) (assoc m k (java.time.Duration/parse v))
+                     :else m))
+             event-m
+             event-m))
+
+(defn insert-event [ds args]
+  (jdbc/execute-one! ds
+                     (-> (insert-into :event)
+                         (values [(parse-times args)])
+                         sql/format)))
+
 
 (def resolvers-map {:query/all-events all-events
                     :query/event-by-id event-by-id
