@@ -17,6 +17,7 @@
                  [metosin/reitit-ring "0.7.0-alpha5"]
                  [metosin/reitit-malli "0.7.0-alpha5"]
                  [metosin/reitit-middleware "0.7.0-alpha5"]]
+  :main ^:skip-aot events-ring-server.core
   :ring {:handler events-ring-server.core/app}
   :plugins [[lein-ring "0.12.6"]]
   :repl-options {:init-ns events-ring-server.core})
