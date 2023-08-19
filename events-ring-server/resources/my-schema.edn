@@ -13,10 +13,10 @@
    {:event_id {:type UUID}
     :summary {:type (non-null String)}
     :descr {:type String}
-    :dtstamp {:type (non-null String)}
-    :dtstart {:type String}
-    :dtend {:type String}
-    :duration {:type String}}}
+    :dtstamp {:type (non-null Date)}
+    :dtstart {:type Date}
+    :dtend {:type Date}
+    :duration {:type Interval}}}
   :RepeatEvent
   {:description "Temp. Not used."
    :fields
