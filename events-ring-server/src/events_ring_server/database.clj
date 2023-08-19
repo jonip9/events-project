@@ -11,3 +11,7 @@
                           :port-number 5432}))
 
 (def ds-opts (jdbc/with-options ds {:builder-fn rs/as-unqualified-lower-maps}))
+(def db-spec {:dbtype "postgres"
+              :dbname "my_database"
+              :username "joni"
+              :password "password312"})

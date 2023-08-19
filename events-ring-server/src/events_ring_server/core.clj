@@ -1,4 +1,5 @@
 (ns events-ring-server.core
+  (:import [com.zaxxer.hikari HikariDataSource])
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [com.walmartlabs.lacinia :refer [execute]]
@@ -6,8 +7,12 @@
                                                   attach-scalar-transformers]]
             [com.walmartlabs.lacinia.schema :as schema]
             [events-ring-server.resolvers :refer [resolvers-map
+            [events-ring-server.database :refer [db-spec]]
                                                   transformers-map]]
             [muuntaja.core :as m]
+            [next.jdbc :as jdbc]
+            [next.jdbc.connection :refer [->pool]]
+            [next.jdbc.result-set :as rs]
             [reitit.coercion.malli :as cm]
             [reitit.middleware :as middleware]
             [reitit.ring :as ring]
@@ -28,7 +33,7 @@
       (attach-resolvers resolvers-map)
       schema/compile))
 
-(def app
+(defn app [ds]
   (ring/ring-handler
    (ring/router
     [["/api"
@@ -50,6 +55,10 @@
    (ring/create-default-handler)))
 
 (defn -main [& args]
-  (jetty/run-jetty app
-                   {:port 3000
-                    :join? true}))
+  (with-open [ds (->pool HikariDataSource db-spec)]
+    (let [ds-opts (jdbc/with-options ds {:builder-fn rs/as-unqualified-lower-maps
+                                         :return-keys true})]
+      (.close (jdbc/get-connection ds-opts))
+      (jetty/run-jetty (app ds-opts)
+                       {:port 3000
+                        :join? true}))))
