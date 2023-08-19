@@ -1,6 +1,5 @@
 (ns events-ring-server.resolvers
   (:import [org.postgresql.util PGInterval]
-  (:require [events-ring-server.database :refer [ds-opts]]
            [java.sql PreparedStatement]
            [java.time Duration])
             [next.jdbc :as jdbc]

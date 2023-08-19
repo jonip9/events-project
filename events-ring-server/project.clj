@@ -10,7 +10,6 @@
                  [com.github.seancorfield/next.jdbc "1.3.847"]
                  [com.zaxxer/HikariCP "5.0.1"]
                  [org.postgresql/postgresql "42.3.7"]
-                 [hikari-cp "3.0.0"]
                  [metosin/jsonista "0.3.7"]
                  [metosin/malli "0.11.0"]
                  [metosin/muuntaja "0.6.8"]
