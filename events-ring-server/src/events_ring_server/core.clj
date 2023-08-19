@@ -6,8 +6,12 @@
             [com.walmartlabs.lacinia.util :refer [attach-resolvers
                                                   attach-scalar-transformers]]
             [com.walmartlabs.lacinia.schema :as schema]
-            [events-ring-server.resolvers :refer [resolvers-map
             [events-ring-server.database :refer [db-spec]]
+            [events-ring-server.resolvers :refer [all-events
+                                                  event-by-id
+                                                  insert-event
+                                                  delete-event
+                                                  resolvers-map
                                                   transformers-map]]
             [muuntaja.core :as m]
             [next.jdbc :as jdbc]
@@ -37,6 +41,18 @@
   (ring/ring-handler
    (ring/router
     [["/api"
+      ["/events" {:get {:handler (fn [_]
+                                   {:status 200
+                                    :body (all-events ds)})}
+                  :post {:handler (fn [{:keys [body-params]}]
+                                    {:status 201
+                                     :body (insert-event ds body-params)})}}]
+      ["/events/:id" {:get {:handler (fn [{{:keys [id]} :path-params}]
+                                       {:status 200
+                                        :body (event-by-id ds id)})}
+                      :delete {:handler (fn [{{:keys [id]} :path-params}]
+                                          {:status 204
+                                           :body (delete-event ds id)})}}]
       ["/graphql" {:post {:parameters {:body [:map
                                               [:query string?]]}
                           :handler (fn [{{{:keys [query]} :body} :parameters}]
