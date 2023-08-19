@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [ring/ring-jetty-adapter "1.9.6"]
                  [com.walmartlabs/lacinia "1.2-alpha-3"]
+                 [com.github.seancorfield/honeysql "2.4.1045"]
                  [com.github.seancorfield/next.jdbc "1.3.847"]
                  [org.postgresql/postgresql "42.3.7"]
                  [hikari-cp "3.0.0"]
