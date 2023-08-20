@@ -1,6 +1,11 @@
-(ns events-ring-server.database)
+(ns events-ring-server.database
+  (:require [hikari-cp.core :refer [make-datasource]]))
 
-(def db-spec {:dbtype "postgres"
-              :dbname "my_database"
+(def db-spec {:adapter "postgresql"
               :username "joni"
-              :password "password312"})
+              :password "password312"
+              :database-name "my_database"
+              :server-name "localhost"
+              :port-number 5432})
+
+(defonce datasrc (delay (make-datasource db-spec)))

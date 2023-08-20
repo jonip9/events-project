@@ -2,7 +2,8 @@
   (:import [org.postgresql.util PGInterval]
            [java.sql PreparedStatement]
            [java.time Duration])
-  (:require [honey.sql :as sql]
+  (:require [events-ring-server.database :refer [datasrc]]
+            [honey.sql :as sql]
             [honey.sql.helpers :refer [select from where insert-into delete-from values]]
             [next.jdbc :as jdbc]
             [next.jdbc.date-time]
@@ -42,16 +43,16 @@
   (read-column-by-index [^org.postgresql.util.PGInterval v _2 _3]
     (<-pg-interval v)))
 
-(defn all-events [ds]
-  (jdbc/execute! ds (-> (select :*)
-                        (from :event)
-                        sql/format)))
+(defn all-events []
+  (jdbc/execute! @datasrc (-> (select :*)
+                              (from :event)
+                              sql/format)))
 
-(defn event-by-id [ds id]
-  (jdbc/execute-one! ds (-> (select :*)
-                            (from :event)
-                            (where [:= :event_id (parse-uuid id)])
-                            sql/format)))
+(defn event-by-id [id]
+  (jdbc/execute-one! @datasrc (-> (select :*)
+                                  (from :event)
+                                  (where [:= :event_id (parse-uuid id)])
+                                  sql/format)))
 
 (defn parse-times [event-m]
   (reduce-kv (fn [m k v]
@@ -63,16 +64,16 @@
              event-m
              event-m))
 
-(defn insert-event [ds args]
-  (jdbc/execute-one! ds
+(defn insert-event [args]
+  (jdbc/execute-one! @datasrc
                      (-> (insert-into :event)
                          (values [(parse-times args)])
                          sql/format)))
 
-(defn delete-event [ds id]
-  (jdbc/execute-one! ds (-> (delete-from :event)
-                            (where [:= :event_id (parse-uuid id)])
-                            sql/format)))
+(defn delete-event [id]
+  (jdbc/execute-one! @datasrc (-> (delete-from :event)
+                                  (where [:= :event_id (parse-uuid id)])
+                                  sql/format)))
 
 (def resolvers-map {:query/all-events all-events
                     :query/event-by-id event-by-id

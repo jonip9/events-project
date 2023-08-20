@@ -8,7 +8,7 @@
                  [com.walmartlabs/lacinia "1.2-alpha-3"]
                  [com.github.seancorfield/honeysql "2.4.1045"]
                  [com.github.seancorfield/next.jdbc "1.3.847"]
-                 [com.zaxxer/HikariCP "5.0.1"]
+                 [hikari-cp "3.0.1"]
                  [org.postgresql/postgresql "42.3.7"]
                  [metosin/jsonista "0.3.7"]
                  [metosin/malli "0.11.0"]
