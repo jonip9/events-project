@@ -5,11 +5,11 @@
             [com.walmartlabs.lacinia.util :refer [attach-resolvers
                                                   attach-scalar-transformers]]
             [com.walmartlabs.lacinia.schema :as schema]
-            [events-ring-server.resolvers :refer [all-events
-                                                  event-by-id
-                                                  insert-event
-                                                  delete-event
-                                                  resolvers-map
+            [events-ring-server.database :refer [all-events
+                                                 event-by-id
+                                                 insert-event
+                                                 delete-event]]
+            [events-ring-server.resolvers :refer [resolvers-map
                                                   transformers-map]]
             [muuntaja.core :as m]
             [reitit.coercion.malli :as cm]
