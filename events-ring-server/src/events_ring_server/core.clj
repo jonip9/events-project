@@ -5,11 +5,11 @@
             [com.walmartlabs.lacinia.util :refer [attach-resolvers
                                                   attach-scalar-transformers]]
             [com.walmartlabs.lacinia.schema :as schema]
-            [events-ring-server.database :refer [all-events
-                                                 event-by-id
-                                                 insert-event
-                                                 delete-event]]
             [events-ring-server.extensions]
+            [events-ring-server.handlers :refer [events-get
+                                                 events-post
+                                                 events-get-by-id
+                                                 events-delete-by-id]]
             [events-ring-server.resolvers :refer [resolvers-map
                                                   transformers-map]]
             [muuntaja.core :as m]
@@ -37,18 +37,10 @@
   (ring/ring-handler
    (ring/router
     [["/api"
-      ["/events" {:get {:handler (fn [_]
-                                   {:status 200
-                                    :body (all-events)})}
-                  :post {:handler (fn [{:keys [body-params]}]
-                                    {:status 201
-                                     :body (insert-event body-params)})}}]
-      ["/events/:id" {:get {:handler (fn [{{:keys [id]} :path-params}]
-                                       {:status 200
-                                        :body (event-by-id id)})}
-                      :delete {:handler (fn [{{:keys [id]} :path-params}]
-                                          {:status 204
-                                           :body (delete-event id)})}}]
+      ["/events" {:get {:handler events-get}
+                  :post {:handler events-post}}]
+      ["/events/:id" {:get {:handler events-get-by-id}
+                      :delete {:handler events-delete-by-id}}]
       ["/graphql" {:post {:parameters {:body [:map
                                               [:query string?]]}
                           :handler (fn [{{{:keys [query]} :body} :parameters}]
