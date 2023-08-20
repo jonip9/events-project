@@ -9,6 +9,7 @@
                                                  event-by-id
                                                  insert-event
                                                  delete-event]]
+            [events-ring-server.extensions]
             [events-ring-server.resolvers :refer [resolvers-map
                                                   transformers-map]]
             [muuntaja.core :as m]
