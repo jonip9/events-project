@@ -79,9 +79,9 @@
                     :mutation/insert-event insert-event})
 
 (def transformers-map
-  {:uuid-parser #(clojure.core/parse-uuid %)
+  {:uuid-parser #(parse-uuid %)
    :uuid-serializer #(str %)
-   :date-parser #(java.time.LocalDateTime/parse %)
-   :date-serializer #(str %)
+   :date-parser #(java.time.Instant/parse %)
+   :date-serializer #(eval %)
    :interval-parser #(java.time.Duration/parse %)
-   :interval-serializer #(str %)})
+   :interval-serializer #(eval %)})
