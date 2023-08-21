@@ -1,21 +1,18 @@
 (ns events-ring-server.handlers
-  (:require [events-ring-server.database :refer [all-events
-                                                 event-by-id
-                                                 insert-event
-                                                 delete-event]]))
+  (:require [events-ring-server.database :as db]))
 
 (defn events-get [_]
   {:status 200
-   :body (all-events)})
+   :body (db/list-events)})
 
 (defn events-post [{:keys [body-params]}]
   {:status 201
-   :body (insert-event body-params)})
+   :body (db/insert-event body-params)})
 
 (defn events-get-by-id [{{:keys [id]} :path-params}]
   {:status 200
-   :body (event-by-id id)})
+   :body (db/find-event-by-id id)})
 
 (defn events-delete-by-id [{{:keys [id]} :path-params}]
   {:status 204
-   :body (delete-event id)})
+   :body (db/delete-event id)})

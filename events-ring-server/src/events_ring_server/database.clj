@@ -13,12 +13,12 @@
 
 (defonce datasrc (delay (make-datasource db-spec)))
 
-(defn all-events []
+(defn list-events []
   (jdbc/execute! @datasrc (-> (select :*)
                               (from :event)
                               sql/format)))
 
-(defn event-by-id [id]
+(defn find-event-by-id [id]
   (jdbc/execute-one! @datasrc (-> (select :*)
                                   (from :event)
                                   (where [:= :event_id (parse-uuid id)])
