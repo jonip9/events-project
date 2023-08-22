@@ -1,7 +1,7 @@
 (ns events-ring-server.database
   (:require [hikari-cp.core :refer [make-datasource]]
             [honey.sql :as sql]
-            [honey.sql.helpers :refer [select from where insert-into delete-from values]]
+            [honey.sql.helpers :as h]
             [next.jdbc :as jdbc]))
 
 (def db-spec {:adapter "postgresql"
@@ -14,14 +14,14 @@
 (defonce datasrc (delay (make-datasource db-spec)))
 
 (defn list-events []
-  (jdbc/execute! @datasrc (-> (select :*)
-                              (from :event)
+  (jdbc/execute! @datasrc (-> (h/select :*)
+                              (h/from :event)
                               sql/format)))
 
 (defn find-event-by-id [id]
-  (jdbc/execute-one! @datasrc (-> (select :*)
-                                  (from :event)
-                                  (where [:= :event_id (parse-uuid id)])
+  (jdbc/execute-one! @datasrc (-> (h/select :*)
+                                  (h/from :event)
+                                  (h/where [:= :event_id (parse-uuid id)])
                                   sql/format)))
 
 (defn parse-times [event-m]
@@ -34,13 +34,14 @@
              event-m
              event-m))
 
-(defn insert-event [args]
-  (jdbc/execute-one! @datasrc
-                     (-> (insert-into :event)
-                         (values [(parse-times args)])
-                         sql/format)))
+(defn insert-event [data]
+  (jdbc/execute-one! @datasrc (-> (h/insert-into :event)
+                                  (h/values [(parse-times data)])
+                                  sql/format)))
 
 (defn delete-event [id]
-  (jdbc/execute-one! @datasrc (-> (delete-from :event)
-                                  (where [:= :event_id (parse-uuid id)])
+  (jdbc/execute-one! @datasrc (-> (h/delete-from :event)
+                                  (h/where [:= :event_id (parse-uuid id)])
+                                  sql/format)))
+
                                   sql/format)))
