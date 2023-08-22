@@ -1,11 +1,9 @@
 (ns events-ring-server.resolvers
-  (:require [events-ring-server.database :refer [all-events
-                                                 event-by-id
-                                                 insert-event]]))
+  (:require [events-ring-server.database :as db]))
 
-(def resolvers-map {:query/all-events all-events
-                    :query/event-by-id event-by-id
-                    :mutation/insert-event insert-event})
+(def resolvers-map {:query/all-events db/list-events
+                    :query/event-by-id db/find-event-by-id
+                    :mutation/insert-event db/insert-event})
 
 (def transformers-map
   {:uuid-parser #(parse-uuid %)
