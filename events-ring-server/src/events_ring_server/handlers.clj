@@ -16,3 +16,7 @@
 (defn events-delete-by-id [{{:keys [id]} :path-params}]
   {:status 204
    :body (db/delete-event id)})
+
+(defn events-update-by-id [{:keys [body-params path-params]}]
+  {:status 204
+   :body (db/update-event (:id path-params) body-params)})

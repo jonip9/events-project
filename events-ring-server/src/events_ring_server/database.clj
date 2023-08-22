@@ -51,4 +51,8 @@
                                       (h/where [:= :event_id (parse-uuid id)])
                                       sql/format)))
 
-                                  sql/format)))
+(defn update-event [id data]
+  (wrap-execute jdbc/execute-one! (-> (h/update :event)
+                                      (h/set (parse-times data))
+                                      (h/where [:= :event_id (parse-uuid id)])
+                                      sql/format)))

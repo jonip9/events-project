@@ -9,7 +9,8 @@
             [events-ring-server.handlers :refer [events-get
                                                  events-post
                                                  events-get-by-id
-                                                 events-delete-by-id]]
+                                                 events-delete-by-id
+                                                 events-update-by-id]]
             [events-ring-server.resolvers :refer [resolvers-map
                                                   transformers-map]]
             [muuntaja.core :as m]
@@ -40,7 +41,8 @@
       ["/events" {:get {:handler events-get}
                   :post {:handler events-post}}]
       ["/events/:id" {:get {:handler events-get-by-id}
-                      :delete {:handler events-delete-by-id}}]
+                      :delete {:handler events-delete-by-id}
+                      :patch {:handler events-update-by-id}}]
       ["/graphql" {:post {:parameters {:body [:map
                                               [:query string?]]}
                           :handler (fn [{{{:keys [query]} :body} :parameters}]
