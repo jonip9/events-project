@@ -2,7 +2,8 @@
   (:require [hikari-cp.core :refer [make-datasource]]
             [honey.sql :as sql]
             [honey.sql.helpers :as h]
-            [next.jdbc :as jdbc]))
+            [next.jdbc :as jdbc]
+            [next.jdbc.result-set :as rs]))
 
 (def db-spec {:adapter "postgresql"
               :username "joni"
@@ -13,16 +14,22 @@
 
 (defonce datasrc (delay (make-datasource db-spec)))
 
+(defn wrap-execute [f query]
+  (with-open [conn (jdbc/get-connection @datasrc)]
+    (let [conn-opts (jdbc/with-options conn {:builder-fn rs/as-unqualified-lower-maps
+                                             :return-keys true})]
+      (f conn-opts query))))
+
 (defn list-events []
-  (jdbc/execute! @datasrc (-> (h/select :*)
-                              (h/from :event)
-                              sql/format)))
+  (wrap-execute jdbc/execute! (-> (h/select :*)
+                                  (h/from :event)
+                                  sql/format)))
 
 (defn find-event-by-id [id]
-  (jdbc/execute-one! @datasrc (-> (h/select :*)
-                                  (h/from :event)
-                                  (h/where [:= :event_id (parse-uuid id)])
-                                  sql/format)))
+  (wrap-execute jdbc/execute-one! (-> (h/select :*)
+                                      (h/from :event)
+                                      (h/where [:= :event_id (parse-uuid id)])
+                                      sql/format)))
 
 (defn parse-times [event-m]
   (reduce-kv (fn [m k v]
@@ -35,13 +42,13 @@
              event-m))
 
 (defn insert-event [data]
-  (jdbc/execute-one! @datasrc (-> (h/insert-into :event)
-                                  (h/values [(parse-times data)])
-                                  sql/format)))
+  (wrap-execute jdbc/execute-one! (-> (h/insert-into :event)
+                                      (h/values [(parse-times data)])
+                                      sql/format)))
 
 (defn delete-event [id]
-  (jdbc/execute-one! @datasrc (-> (h/delete-from :event)
-                                  (h/where [:= :event_id (parse-uuid id)])
-                                  sql/format)))
+  (wrap-execute jdbc/execute-one! (-> (h/delete-from :event)
+                                      (h/where [:= :event_id (parse-uuid id)])
+                                      sql/format)))
 
                                   sql/format)))
