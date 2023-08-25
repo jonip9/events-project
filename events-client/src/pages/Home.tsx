@@ -87,16 +87,16 @@ export function Home() {
   function combineEvents(events: Event[]): EventItem[] {
     const d = new Date();
     const allEvents = events
-          .map((item) => {
-            const ival = getInterval(
-              item.duration.split(' '),
-              d,
-              new Date()
-            );
-            return generateEvents(item, ival, d.getTimezoneOffset());
-          })
-          .flat()
-          .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      .map((item) => {
+        const ival = getInterval(
+          item.duration.split(' '),
+          d,
+          new Date()
+        );
+        return generateEvents(item, ival, d.getTimezoneOffset());
+      })
+      .flat()
+      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
     return allEvents;
   }
