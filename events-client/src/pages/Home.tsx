@@ -1,6 +1,6 @@
 import { useGetEvents } from '../hooks/api';
 
-interface Event {
+interface EventNote {
   event_id: string;
   summary: string;
   descr: string;
@@ -10,7 +10,7 @@ interface Event {
   duration: number;
 }
 
-interface EventItem {
+interface EventNoteItem {
   event_id: string;
   name: string;
   description: string;
@@ -20,7 +20,7 @@ interface EventItem {
 export function Home() {
   const { isLoading, data, error } = useGetEvents();
 
-  function generateEvents(event: Event): EventItem[] {
+  function generateEvents(event: EventNote): EventNoteItem[] {
     const d = new Date();
     let curr = new Date(event.dtstart);
     const end = new Date(event.dtend);
@@ -42,7 +42,7 @@ export function Home() {
     return arr;
   }
 
-  function combineEvents(events: Event[]): EventItem[] {
+  function combineEvents(events: EventNote[]): EventNoteItem[] {
     const allEvents = events
       .map((item) => {
         return generateEvents(item);
