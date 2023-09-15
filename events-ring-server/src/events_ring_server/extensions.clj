@@ -22,17 +22,17 @@
     (.setObject s i (->pg-interval v))))
 
 (defn <-pg-interval
-  "Takes a PGInterval instance and converts it into a Duration
-   instance. Ignore sub-second units."
+  "Takes a PGInterval instance and converts it into a hash-map representation
+  of the interval value. Seconds are ignored."
   [^org.postgresql.util.PGInterval interval]
-  (-> Duration/ZERO
-      (.plusSeconds (.getSeconds interval))
-      (.plusMinutes (.getMinutes interval))
-      (.plusHours (.getHours interval))
-      (.plusDays (.getDays interval))))
+  {:years (.getYears interval)
+   :months (.getMonths interval)
+   :days (.getDays interval)
+   :hours (.getHours interval)
+   :minutes (.getMinutes interval)})
 
 (extend-protocol rs/ReadableColumn
-  ;; Convert PGIntervals back to durations.
+  ;; Convert PGIntervals to hash-maps.
   org.postgresql.util.PGInterval
   (read-column-by-label [^org.postgresql.util.PGInterval v _]
     (<-pg-interval v))

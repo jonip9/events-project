@@ -36,7 +36,12 @@
                (cond (or (= k :dtstamp)
                          (= k :dtstart)
                          (= k :dtend)) (assoc m k (java.time.Instant/parse v))
-                     (= k :duration) (assoc m k (java.time.Duration/parse v))
+                     (= k :duration) (assoc m k (org.postgresql.util.PGInterval. (:years v)
+                                                                                 (:months v)
+                                                                                 (:days v)
+                                                                                 (:hours v)
+                                                                                 (:minutes v)
+                                                                                 0.0))
                      :else m))
              event-m
              event-m))
