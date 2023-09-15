@@ -1,7 +1,6 @@
 (ns events-ring-server.extensions
   (:import [org.postgresql.util PGInterval]
-           [java.sql PreparedStatement]
-           [java.time Duration])
+           [java.sql PreparedStatement])
   (:require [next.jdbc.date-time]
             [next.jdbc.prepare :as p]
             [next.jdbc.result-set :as rs]))
