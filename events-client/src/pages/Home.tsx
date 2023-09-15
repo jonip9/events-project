@@ -7,7 +7,13 @@ interface EventNote {
   dtstamp: string;
   dtstart: string;
   dtend: string;
-  duration: number;
+  duration: {
+    years: number;
+    months: number;
+    days: number;
+    hours: number;
+    minutes: number;
+  };
 }
 
 interface EventNoteItem {
@@ -74,7 +80,7 @@ export function Home() {
                         <div>{item.description}</div>
                         <div>{item.timestamp.toString()}</div>
                       </div>
-                    )
+                    );
                   })
               )}
             </div>
