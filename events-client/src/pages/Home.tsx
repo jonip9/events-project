@@ -1,4 +1,5 @@
 import { useGetEvents } from '../hooks/api';
+import type { EventNote, EventNoteItem } from '../types/event';
 
 
 }
