@@ -27,22 +27,23 @@ export function Home() {
   const { isLoading, data, error } = useGetEvents();
 
   function generateEvents(event: EventNote): EventNoteItem[] {
-    const d = new Date();
-    let curr = new Date(event.dtstart);
+    const curr = new Date(event.dtstart);
     const end = new Date(event.dtend);
+    const { years, months, days, hours, minutes } = event.duration;
     const arr = [];
 
     while (curr <= end) {
-      const tstamp = new Date(curr);
-
-      tstamp.setMinutes(tstamp.getMinutes() - (d.getTimezoneOffset() - tstamp.getTimezoneOffset()));
       arr.push({
         event_id: event.event_id,
         name: event.summary,
         description: event.descr,
-        timestamp: tstamp
+        timestamp: new Date(curr)
       });
-      curr.setTime(curr.getTime() + (event.duration * 1000))
+      curr.setFullYear(curr.getFullYear() + years);
+      curr.setMonth(curr.getMonth() + months);
+      curr.setDate(curr.getDate() + days);
+      curr.setHours(curr.getHours() + hours);
+      curr.setMinutes(curr.getMinutes() + minutes);
     }
 
     return arr;
