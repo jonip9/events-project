@@ -29,6 +29,10 @@
     ],
     "parser": "@typescript-eslint/parser",
     "plugins": ["@typescript-eslint"],
-    "root": true
+    "root": true,
+    "rules": {
+      "indent": ["error", 2, { "SwitchCase": 1 }],
+      "semi": ["error", "always"]
+    }
   }
 }
