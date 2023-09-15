@@ -10,7 +10,7 @@ export function Home() {
   function generateEvents(event: EventNote): EventNoteItem[] {
     const curr = new Date(event.dtstart);
     const end = new Date(event.dtend);
-    const { years, months, days, hours, minutes } = event.duration;
+    const { years, months, days, hours, minutes } = event.recur;
     const arr = [];
 
     while (curr <= end) {

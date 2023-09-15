@@ -5,7 +5,7 @@ export interface EventNote {
   dtstamp: string;
   dtstart: string;
   dtend: string;
-  duration: {
+  recur: {
     years: number;
     months: number;
     days: number;
