@@ -1,9 +1,6 @@
 import { useGetEvents } from '../hooks/api';
 import type { EventNote, EventNoteItem } from '../types/event';
 
-
-}
-
 export function Home() {
   const { isLoading, data, error } = useGetEvents();
 
