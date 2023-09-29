@@ -14,28 +14,28 @@ export function useGetEvents(id?: string) {
     const props: RequestInit = {
       method: 'GET',
       headers: {
-	'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       signal: abortController.signal
     };
 
     const getData = async () => {
       try {
-	setIsLoading(true);
+        setIsLoading(true);
         const res = await fetch(url, props);
         const json = await res.json();
-	setData(json);
+        setData(json);
       } catch (e) {
-	setError(e);
+        setError(e);
       } finally {
-	setIsLoading(false);
+        setIsLoading(false);
       }
     };
     getData();
 
     return () => {
       abortController.abort();
-    }
+    };
   }, [id]);
 
   return { isLoading, data, error };
