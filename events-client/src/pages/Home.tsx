@@ -42,7 +42,7 @@ export function Home() {
     <>
       <main class="main">
         <div class="eventsHeader">
-          temp
+          <EventForm />
         </div>
         <div class="eventsContainer">
           <div class="sideMenu">
