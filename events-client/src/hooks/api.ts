@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'preact/hooks';
+import { EventNote } from '../types/event';
 
-export function useGetEvents(id?: string) {
+interface ApiResponse {
+  isLoading: boolean;
+  data: EventNote[],
+  error: boolean;
+}
+
+export function useGetEvents(id?: string): ApiResponse {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState();
   const [error, setError] = useState();
